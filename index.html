@@ -1,53 +1,20 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Todo.html : ">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Todo.html</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/sd108806/todo.html">View on GitHub</a>
-
-          <h1 id="project_title">Todo.html</h1>
-          <h2 id="project_tagline"></h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/sd108806/todo.html/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/sd108806/todo.html/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>var html5rocks = {};
+var html5rocks = {};
 html5rocks.webdb = {};
-html5rocks.webdb.db = null;</p>
+html5rocks.webdb.db = null;
 
-<p>html5rocks.webdb.open = function() {
+html5rocks.webdb.open = function() {
   var dbSize = 5 * 1024 * 1024; // 5MB
   html5rocks.webdb.db = openDatabase("Todo", "1.0", "Todo manager", dbSize);
-}</p>
+}
 
-<p>html5rocks.webdb.createTable = function() {
+html5rocks.webdb.createTable = function() {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx) {
     tx.executeSql("CREATE TABLE IF NOT EXISTS todo(ID INTEGER PRIMARY KEY ASC, todo TEXT, added_on DATETIME)", []);
   });
-}</p>
+}
 
-<p>html5rocks.webdb.addTodo = function(todoText) {
+html5rocks.webdb.addTodo = function(todoText) {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx){
     var addedOn = new Date();
@@ -56,71 +23,57 @@ html5rocks.webdb.db = null;</p>
         html5rocks.webdb.onSuccess,
         html5rocks.webdb.onError);
    });
-}</p>
+}
 
-<p>html5rocks.webdb.onError = function(tx, e) {
+html5rocks.webdb.onError = function(tx, e) {
   alert("There has been an error: " + e.message);
-}</p>
+}
 
-<p>html5rocks.webdb.onSuccess = function(tx, r) {
+html5rocks.webdb.onSuccess = function(tx, r) {
   // re-render the data.
   html5rocks.webdb.getAllTodoItems(loadTodoItems);
-}</p>
+}
 
-<p>html5rocks.webdb.getAllTodoItems = function(renderFunc) {
+
+html5rocks.webdb.getAllTodoItems = function(renderFunc) {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx) {
     tx.executeSql("SELECT * FROM todo", [], renderFunc,
         html5rocks.webdb.onError);
   });
-}</p>
+}
 
-<p>html5rocks.webdb.deleteTodo = function(id) {
+html5rocks.webdb.deleteTodo = function(id) {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx){
     tx.executeSql("DELETE FROM todo WHERE ID=?", [id],
         html5rocks.webdb.onSuccess,
         html5rocks.webdb.onError);
     });
-}</p>
-
-<p>function loadTodoItems(tx, rs) {
-  var rowOutput = "";
-  var todoItems = document.getElementById("todoItems");
-  for (var i=0; i &lt; rs.rows.length; i++) {
-    rowOutput += renderTodo(rs.rows.item(i));
-  }</p>
-
-<p>todoItems.innerHTML = rowOutput;
-}</p>
-
-<p>function renderTodo(row) {
-  return "</p>" + row.todo  + " [<a>Delete</a>]";
 }
 
-<p>function init() {
+function loadTodoItems(tx, rs) {
+  var rowOutput = "";
+  var todoItems = document.getElementById("todoItems");
+  for (var i=0; i < rs.rows.length; i++) {
+    rowOutput += renderTodo(rs.rows.item(i));
+  }
+
+  todoItems.innerHTML = rowOutput;
+}
+
+function renderTodo(row) {
+  return "<li>" + row.todo  + " [<a href='javascript:void(0);'  onclick='html5rocks.webdb.deleteTodo(" + row.ID +");'>Delete</a>]</li>";
+}
+
+function init() {
   html5rocks.webdb.open();
   html5rocks.webdb.createTable();
   html5rocks.webdb.getAllTodoItems(loadTodoItems);
-}</p>
+}
 
-<p>function addTodo() {
+function addTodo() {
   var todo = document.getElementById("todo");
   html5rocks.webdb.addTodo(todo.value);
   todo.value = "";
-}​</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Todo.html maintained by <a href="https://github.com/sd108806">sd108806</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
-</html>
+}?
